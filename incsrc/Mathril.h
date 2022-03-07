@@ -34,4 +34,36 @@ class Vec2
         friend Vec2 operator*(float,Vec2&&);
 };
 
+
+class Vec4
+{
+    private:
+        float* data;
+    public:
+        Vec4();
+        Vec4(float r, float x, float y, float z);
+        ~Vec4();
+        Vec4(Vec4&);
+        Vec4(Vec4&&);
+
+        Vec4& operator=(Vec4&);
+        Vec4& operator=(Vec4&&);
+
+        float& operator[](int);
+
+        friend Vec4 operator+(Vec4& v, Vec4& w);
+        friend Vec4 operator+(Vec4& v, Vec4&& w);
+        friend Vec4 operator+(Vec4&& v, Vec4& w);
+        friend Vec4 operator+(Vec4&& v, Vec4&& w);
+        
+
+        friend Vec4 operator-(Vec4& v, Vec4& w);
+        friend Vec4 operator-(Vec4& v, Vec4&& w);
+        friend Vec4 operator-(Vec4&& v, Vec4& w);
+        friend Vec4 operator-(Vec4&& v, Vec4&& w);
+       
+        friend Vec4 operator*(float,Vec4&);
+        friend Vec4 operator*(float,Vec4&&);
+};
+
 #endif

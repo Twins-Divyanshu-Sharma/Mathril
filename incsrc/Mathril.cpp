@@ -134,3 +134,131 @@ Vec2 operator*(float s, Vec2&& vec)
     vec.data[1] = s*vec.data[1];
     return std::move(vec);
 }
+
+Vec4::Vec4()
+{
+    data = new float[4];
+    for(int i=0; i<4; i++)
+        data[i] = 0;
+}
+
+Vec4::Vec4(float r, float x, float y, float z)
+{
+    data = new float[4];
+    data[0] = r;
+    data[1] = x;
+    data[2] = y;
+    data[3] = z;
+}
+
+Vec4::~Vec4()
+{
+    delete [] data;
+}
+
+Vec4::Vec4(Vec4& vec)
+{
+    data = new float[4];
+    for(int i=0; i<4; i++)
+        data[i] = vec.data[i];
+}
+
+Vec4::Vec4(Vec4&& vec)
+{
+    data = vec.data;
+    vec.data = nullptr;
+}
+
+Vec4& Vec4::operator=(Vec4& vec)
+{
+    if(this == &vec) return *this;
+    data[0] = vec.data[0];
+    data[1] = vec.data[1];
+    return *this;
+}
+
+Vec4& Vec4::operator=(Vec4&& vec)
+{
+    data = vec.data;
+    vec.data = nullptr;
+    return *this;
+}
+
+float& Vec4::operator[](int n)
+{
+   if(n >= 0 && n < 4)
+   {
+        return data[n];
+   }
+   else
+   {
+       std::cerr << "index of Vec4 is out of bounds" << std::endl;
+   }
+}
+
+Vec4 operator+(Vec4& v, Vec4& w)
+{
+    return Vec4(v.data[0]+w.data[0], v.data[1]+w.data[1], v.data[2]+w.data[2], v.data[3]+w.data[3]);
+}
+
+Vec4 operator+(Vec4& v, Vec4&& w)
+{
+    for(int i=0; i<4; i++)
+        w.data[i] = v.data[i] + w.data[i];
+    return std::move(w);
+}
+
+Vec4 operator+(Vec4&& v, Vec4& w)
+{
+    for(int i=0; i<4; i++)
+        v.data[i] = v.data[i] + w.data[i];
+    return std::move(v);
+}
+
+Vec4 operator+(Vec4&& v, Vec4&& w)
+{
+    for(int i=0; i<4; i++)
+        v.data[i] = v.data[i] + w.data[i];
+    return std::move(v);
+}
+
+
+Vec4 operator-(Vec4& v, Vec4& w)
+{
+    return Vec4(v.data[0]-w.data[0], v.data[1]-w.data[1], v.data[2]-w.data[2], v.data[3]-w.data[3]);
+}
+
+Vec4 operator-(Vec4& v, Vec4&& w)
+{
+    for(int i=0; i<4; i++)
+        w.data[i] = v.data[i] - w.data[i];
+    return std::move(w);
+}
+
+Vec4 operator-(Vec4&& v, Vec4& w)
+{
+    for(int i=0; i<4; i++)
+        v.data[i] = v.data[i] - w.data[i];
+    return std::move(v);
+}
+
+Vec4 operator-(Vec4&& v, Vec4&& w)
+{
+    for(int i=0; i<4; i++)
+        v.data[i] = v.data[i] - w.data[i];
+    return std::move(v);
+}
+
+Vec4 operator*(float s, Vec4& v)
+{
+    return Vec4(s*v.data[0], s*v.data[1], s*v.data[2], s*v.data[3]);
+}
+
+Vec4 operator*(float s, Vec4&& v)
+{
+    for(int i=0; i<4; i++)
+        v.data[i] = s*v.data[i];
+    return std::move(v);
+}
+
+
