@@ -113,4 +113,50 @@ class Vec4
         friend std::ostream& operator<<(std::ostream& os, const Vec4& v);
 };
 
+
+class Mat3
+{
+    private:
+        float **data;
+    public:
+        Mat3();
+        Mat3(float m00, float m01, float m02,
+             float m10, float m11, float m12,
+             float m20, float m21, float m22);
+        Mat3(Mat3&);
+        Mat3(Mat3&&);
+        ~Mat3();
+
+        Mat3& operator=(Mat3&);
+        Mat3& operator=(Mat3&&);
+
+        float* operator[](int);
+
+        friend Mat3 operator+(Mat3& m, Mat3& n);
+        friend Mat3 operator+(Mat3& m, Mat3&& n);
+        friend Mat3 operator+(Mat3&& m, Mat3& n);
+        friend Mat3 operator+(Mat3&& m, Mat3&& n);
+
+        friend Mat3 operator-(Mat3& m, Mat3& n);
+        friend Mat3 operator-(Mat3& m, Mat3&& n);
+        friend Mat3 operator-(Mat3&& m, Mat3& n);
+        friend Mat3 operator-(Mat3&& m, Mat3&& n);
+
+        friend Mat3 operator*(Mat3& m, Mat3& n); 
+        friend Mat3 operator*(Mat3& m, Mat3&& n);
+        friend Mat3 operator*(Mat3&& m, Mat3& n);
+        friend Mat3 operator*(Mat3&& m, Mat3&& n);
+  
+        friend Vec3 operator*(Mat3& m, Vec3& v);
+        friend Vec3 operator*(Mat3& m, Vec3&& v);
+        friend Vec3 operator*(Mat3&& m, Vec3& v);
+        friend Vec3 operator*(Mat3&& m, Vec3&& v);
+
+
+        friend std::ostream& operator<<(std::ostream& os, const Mat3& v);
+
+};
+
+
+
 #endif

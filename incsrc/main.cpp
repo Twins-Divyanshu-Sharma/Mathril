@@ -4,16 +4,26 @@
 
 int main()
 {
-    std::cout << "-----Init" << std::endl;
+   Mat3 identity(1,2,3,
+                 2,1,2,
+                 3,2,2);
 
-    Vec2 a(2,2);
-    Vec2 b(3,5);
-    Vec2 c(1,4);
+   Mat3 someShit(2,2,2,
+                 5,3,1,
+                 1,6,7);
+
+   Mat3 mult = identity * someShit;
+
     
-    std::cout << "------Close " << std::endl;
+   std::cout << mult << std::endl;
 
-    Vec2 d = a + b + c;
+   Mat3 lolt = Mat3(1,2,3,2,1,2,3,2,2) * someShit;
 
-    std::cout << "(" << d[0] << "," << d[1] << ")" << std::endl;
-    return 0;
+   std::cout << lolt << std::endl;
+
+   Mat3 rort = identity * Mat3(2,2,2,5,3,1,1,6,7);
+
+   std::cout << rort << std::endl;
+
+   return 0;
 }

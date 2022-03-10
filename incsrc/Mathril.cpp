@@ -33,7 +33,8 @@ Vec2::Vec2(float x, float y)
 
 Vec2::~Vec2()
 {
-    delete [] data;
+    if(data)
+       delete [] data;
 }
 
 Vec2::Vec2(Vec2& vec)
@@ -59,8 +60,9 @@ Vec2& Vec2::operator=(Vec2& vec)
 
 Vec2& Vec2::operator=(Vec2&& vec)
 {
+   float* temp = data;
    data = vec.data;
-   vec.data = nullptr;
+   vec.data = temp;
    return *this;
 }
 
@@ -177,7 +179,8 @@ Vec3::Vec3(Vec3&& vec)
 
 Vec3::~Vec3()
 {
-    delete[] data;
+    if(data)
+        delete[] data;
 }
 
 Vec3& Vec3::operator=(Vec3& vec)
@@ -190,8 +193,9 @@ Vec3& Vec3::operator=(Vec3& vec)
 
 Vec3& Vec3::operator=(Vec3&& vec)
 {
+    float* temp = data;
     data = vec.data;
-    vec.data = nullptr;
+    vec.data = temp;
     return *this;
 }
 
@@ -349,7 +353,8 @@ Vec4::Vec4(float r, float x, float y, float z)
 
 Vec4::~Vec4()
 {
-    delete [] data;
+    if(data)
+       delete [] data;
 }
 
 Vec4::Vec4(Vec4& vec)
@@ -375,8 +380,9 @@ Vec4& Vec4::operator=(Vec4& vec)
 
 Vec4& Vec4::operator=(Vec4&& vec)
 {
+    float* temp = data;
     data = vec.data;
-    vec.data = nullptr;
+    vec.data = temp;
     return *this;
 }
 
@@ -466,4 +472,285 @@ std::ostream& operator<<(std::ostream& os, const Vec4& v)
 	return os;
 }
 
+Mat3::Mat3()
+{
+    data = new float*[3];
+    for(int i=0; i<3; i++)
+    {
+        data[i] = new float[3];
+        for(int j=0; j<3; j++)
+        {
+            data[i][j] = 0;
+        }
+    }
+}
+
+Mat3::Mat3(float m00, float m01, float m02,
+           float m10, float m11, float m12,
+           float m20, float m21, float m22)
+{
+
+    data = new float*[3];
+    for(int i=0; i<3; i++)
+    {
+        data[i] = new float[3];
+    }
+
+    data[0][0] = m00; data[0][1] = m01; data[0][2] = m02;
+    data[1][0] = m10; data[1][1] = m11; data[1][2] = m12;
+    data[2][0] = m20; data[2][1] = m21; data[2][2] = m22;
+}
+
+Mat3::Mat3(Mat3& mat)
+{
+    data = new float*[3];
+    for(int i=0; i<3; i++)
+    {
+        data[i] = new float[3];
+        for(int j=0; j<3; j++)
+        {
+            data[i][j] = mat.data[i][j];
+        }
+    }
+}
+
+Mat3::Mat3(Mat3&& mat)
+{
+    data = mat.data;
+    mat.data = nullptr;
+}
+
+Mat3::~Mat3()
+{
+    if(!data)
+    {
+        for(int i=0; i<3; i++)
+        {
+            delete [] data[i];
+        }
+        delete [] data;
+    }
+}
+
+Mat3& Mat3::operator=(Mat3& mat)
+{
+    if(this == &mat) return *this;
+
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            data[i][j] = mat.data[i][j];
+
+    return *this;
+}
+
+Mat3& Mat3::operator=(Mat3&& mat)
+{
+    float** temp = data;
+    data = mat.data;
+    mat.data = temp;
+    return *this;
+}
+
+float* Mat3::operator[](int n)
+{
+    return data[n];
+}
+
+Mat3 operator+(Mat3& m, Mat3& n)
+{
+    return Mat3(m.data[0][0]+n.data[0][0], m.data[0][1]+n.data[0][1], m.data[0][2]+n.data[0][2],
+                m.data[1][0]+n.data[1][0], m.data[1][1]+n.data[1][1], m.data[1][2]+n.data[1][2],
+                m.data[2][0]+n.data[2][0], m.data[2][1]+n.data[2][1], m.data[2][2]+n.data[2][2]);
+}
+
+Mat3 operator+(Mat3& m, Mat3&& n)
+{
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            n[i][j] = m[i][j] + n[i][j];
+    return std::move(n);
+}
+
+Mat3 operator+(Mat3&& m, Mat3& n)
+{
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            m[i][j] = m[i][j] + n[i][j];
+    return std::move(m);
+}
+
+Mat3 operator+(Mat3&& m, Mat3&& n)
+{
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            m[i][j] = m[i][j] + n[i][j];
+    return std::move(m);
+}
+
+
+Mat3 operator-(Mat3& m, Mat3& n)
+{
+    return Mat3(m.data[0][0]-n.data[0][0], m.data[0][1]-n.data[0][1], m.data[0][2]-n.data[0][2],
+                m.data[1][0]-n.data[1][0], m.data[1][1]-n.data[1][1], m.data[1][2]-n.data[1][2],
+                m.data[2][0]-n.data[2][0], m.data[2][1]-n.data[2][1], m.data[2][2]-n.data[2][2]);
+}
+
+Mat3 operator-(Mat3& m, Mat3&& n)
+{
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            n[i][j] = m[i][j] - n[i][j];
+    return std::move(n);
+}
+
+Mat3 operator-(Mat3&& m, Mat3& n)
+{
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            m[i][j] = m[i][j] - n[i][j];
+    return std::move(m);
+}
+
+Mat3 operator-(Mat3&& m, Mat3&& n)
+{
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            m[i][j] = m[i][j] - n[i][j];
+    return std::move(m);
+}
+
+Mat3 operator*(Mat3& m, Mat3& n)
+{
+   return Mat3(m.data[0][0]*n.data[0][0] + m.data[0][1]*n.data[1][0] + m.data[0][2]*n.data[2][0],
+               m.data[0][0]*n.data[0][1] + m.data[0][1]*n.data[1][1] + m.data[0][2]*n.data[2][1],
+               m.data[0][0]*n.data[0][2] + m.data[0][1]*n.data[1][2] + m.data[0][2]*n.data[2][2],
+               m.data[1][0]*n.data[0][0] + m.data[1][1]*n.data[1][0] + m.data[1][2]*n.data[2][0],
+               m.data[1][0]*n.data[0][1] + m.data[1][1]*n.data[1][1] + m.data[1][2]*n.data[2][1],
+               m.data[1][0]*n.data[0][2] + m.data[1][1]*n.data[1][2] + m.data[1][2]*n.data[2][2],
+               m.data[2][0]*n.data[0][0] + m.data[2][1]*n.data[1][0] + m.data[2][2]*n.data[2][0],
+               m.data[2][0]*n.data[0][1] + m.data[2][1]*n.data[1][1] + m.data[2][2]*n.data[2][1],
+               m.data[2][0]*n.data[0][2] + m.data[2][1]*n.data[1][2] + m.data[2][2]*n.data[2][2] 
+              );
+}
+
+Mat3 operator*(Mat3&& m, Mat3& n)
+{
+    for(int i=0; i<3; i++)
+    {
+        float temp[3] = {0};
+        for(int j=0; j<3; j++)
+        {
+            for(int k=0; k<3; k++)
+            {
+                temp[j] += m.data[i][k] * n.data[k][j];
+            }
+        }
+        for(int x=0; x<3; x++)
+            m.data[i][x] = temp[x];
+    }
+
+    return std::move(m);
+}
+
+Mat3 operator*(Mat3& m, Mat3&& n)
+{
+    for(int i=0; i<3; i++)
+    {
+        float temp[3] = {0};
+        for(int j=0; j<3; j++)
+        {
+            for(int k=0; k<3; k++)
+            {
+                temp[j] += m.data[j][k] * n.data[k][i];
+            }
+        }
+        for(int x=0; x<3; x++)
+            n.data[x][i] = temp[x];
+    }
+
+    return std::move(n);
+}
+
+
+Mat3 operator*(Mat3&& m, Mat3&& n)
+{
+    for(int i=0; i<3; i++)
+    {
+        float temp[3] = {0};
+        for(int j=0; j<3; j++)
+        {
+            for(int k=0; k<3; k++)
+            {
+                temp[j] += m.data[i][k] * n.data[k][j];
+            }
+        }
+        for(int x=0; x<3; x++)
+            m.data[i][x] = temp[x];
+    }
+
+    return std::move(m);
+}
+
+Vec3 operator*(Mat3& m, Vec3& v)
+{
+    return Vec3(v[0]*m.data[0][0] + v[1]*m.data[0][1] + v[2]*m.data[0][2],
+                v[0]*m.data[1][0] + v[1]*m.data[1][1] + v[2]*m.data[1][2],
+                v[0]*m.data[2][0] + v[1]*m.data[2][1] + v[2]*m.data[2][2]);
+}
+
+Vec3 operator*(Mat3& m, Vec3&& v)
+{
+    float temp[3] = {0};
+    for(int i=0; i<3; i++)
+    {
+        for(int j=0; j<3; j++)
+        {
+            temp[i] += v[j]*m.data[i][j];
+        }
+    }
+    for(int i=0; i<3; i++)
+        v[i] = temp[i];
+
+    return std::move(v);
+}
+
+Vec3 operator*(Mat3&& m, Vec3& v)
+{
+    return Vec3(v[0]*m.data[0][0] + v[1]*m.data[0][1] + v[2]*m.data[0][2],
+                v[0]*m.data[1][0] + v[1]*m.data[1][1] + v[2]*m.data[1][2],
+                v[0]*m.data[2][0] + v[1]*m.data[2][1] + v[2]*m.data[2][2]);
+}
+
+
+Vec3 operator*(Mat3&& m, Vec3&& v)
+{
+    float temp[3] = {0};
+    for(int i=0; i<3; i++)
+    {
+        for(int j=0; j<3; j++)
+        {
+            temp[i] += v[j]*m.data[i][j];
+        }
+    }
+    for(int i=0; i<3; i++)
+        v[i] = temp[i];
+
+    return std::move(v);
+}
+
+
+
+std::ostream& operator<<(std::ostream& os, const Mat3& m)
+{
+    for(int i=0; i<3; i++)
+    {
+        for(int j=0; j<3; j++)
+        {
+            os << m.data[i][j] << ", ";
+        }
+        os << std::endl;
+    }
+
+	return os;
+}
 
