@@ -261,4 +261,255 @@ Vec4 operator*(float s, Vec4&& v)
     return std::move(v);
 }
 
+Mat2::Mat2()
+{
+    data = new float*[2];
+    for(int i=0; i<2; i++)
+    {
+        data[i] = new float[2];
+        for(int j=0; j<2; j++)
+            data[i][j] = 0;
+    }
+}
 
+Mat2::~Mat2()
+{
+    if(!data)
+    {
+        for(int i=0; i<2; i++)
+            delete [] data[i];
+        delete [] data;
+    }
+}
+
+Mat2::Mat2(float m00, float m01, float m10, float m11)
+{
+    data = new float*[2];
+    for(int i=0; i<2; i++)
+        data[i] = new float[2];
+
+    data[0][0] = m00;
+    data[0][1] = m01;
+    data[1][0] = m10;
+    data[1][1] = m11;
+}
+
+Mat2::Mat2(Mat2& m)
+{
+    data = new float*[2];
+    for(int i=0; i<2; i++)
+    {
+        data[i] = new float[2];
+        for(int j=0; j<2; j++)
+            data[i][j] = m.data[i][j];
+    }
+}
+
+Mat2::Mat2(Mat2&& m)
+{
+    data = m.data;
+    m.data = nullptr;
+}
+
+Mat2& Mat2::operator=(Mat2& m)
+{
+    if( this == &m ) return *this;
+
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            data[i][j] = m.data[i][j];
+
+    return *this;
+}
+
+Mat2& Mat2::operator=(Mat2&& m)
+{
+    float** temp = data;
+    data = m.data;
+    m.data = temp;
+    return *this;
+}
+
+float* Mat2::operator[](int n)
+{
+    return data[n];
+}
+
+Mat2 operator+(Mat2& m, Mat2& w)
+{
+    return Mat2( m.data[0][0] + w.data[0][0],  m.data[0][1] + w.data[0][1],
+                 m.data[1][0] + w.data[1][0],  m.data[1][1] + w.data[1][1] );
+}
+
+Mat2 operator+(Mat2& m, Mat2&& w)
+{
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            w[i][j] = m[i][j] + w[i][j];
+    return std::move(w);
+}
+
+Mat2 operator+(Mat2&& m, Mat2& w)
+{
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            m[i][j] = m[i][j] + w[i][j];
+    return std::move(m);
+}
+
+Mat2 operator+(Mat2&& m, Mat2&& w)
+{
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            m[i][j] = m[i][j] + w[i][j];
+    return std::move(m);
+}
+
+Mat2 operator-(Mat2& m, Mat2& w)
+{
+    return Mat2( m.data[0][0] - w.data[0][0],  m.data[0][1] - w.data[0][1],
+                 m.data[1][0] - w.data[1][0],  m.data[1][1] - w.data[1][1] );
+}
+
+Mat2 operator-(Mat2& m, Mat2&& w)
+{
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            w[i][j] = m[i][j] - w[i][j];
+    return std::move(w);
+}
+
+Mat2 operator-(Mat2&& m, Mat2& w)
+{
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            m[i][j] = m[i][j] - w[i][j];
+    return std::move(m);
+}
+
+Mat2 operator-(Mat2&& m, Mat2&& w)
+{
+    for(int i=0; i<2; i++)
+        for(int j=0; j<2; j++)
+            m[i][j] = m[i][j] - w[i][j];
+    return std::move(m);
+}
+
+Mat2 operator*(Mat2& m, Mat2& w)
+{    
+    return Mat2( m.data[0][0]*w.data[0][0] + m.data[0][1]*w.data[1][0],
+                 m.data[0][0]*w.data[0][1] + m.data[0][1]*w.data[1][1],
+                 m.data[1][0]*w.data[0][0] + m.data[1][1]*w.data[1][0],
+                 m.data[1][0]*w.data[0][1] + m.data[1][1]*w.data[1][1] );
+}
+
+Mat2 operator*(Mat2&& m, Mat2& w)
+{ 
+    for(int i=0; i<2; i++)
+    {
+       float temp[2] = {0};
+       for(int j=0; j<2; j++)
+        {
+            for(int k=0; k<2; k++)
+                temp[j] += m.data[i][k]*w.data[k][j];
+        }
+        for(int x=0; x<2; x++) 
+            m.data[i][x] = temp[x];    
+    }
+
+    return std::move(m);
+}
+
+Mat2 operator*(Mat2& m, Mat2&& w)
+{
+    for(int i=0; i<2; i++)
+    { 
+        float temp[2] = {0};
+        for(int j=0; j<2; j++)
+        {
+            for(int k=0; k<2; k++)
+                temp[j] += m.data[j][k]*w.data[k][i];
+        }
+        for(int x=0; x<2; x++)
+            w.data[x][i] = temp[x];
+   }
+
+    return std::move(w);
+}
+
+Mat2 operator*(Mat2&& m, Mat2&& w)
+{ 
+    for(int i=0; i<2; i++)
+    {
+       float temp[2] = {0};
+       for(int j=0; j<2; j++)
+        {
+            for(int k=0; k<2; k++)
+            {
+                temp[j] += m.data[i][k]*w.data[k][j];
+            }
+        }
+        for(int x=0; x<2; x++) 
+            m.data[i][x] = temp[x];    
+    }
+
+    return std::move(m);
+}
+
+Vec2 operator*(Mat2& m, Vec2& v)
+{
+    return Vec2(v[0]*m.data[0][0] + v[1]*m.data[0][1],
+                v[0]*m.data[1][0] + v[1]*m.data[1][1]);
+}
+
+Vec2 operator*(Mat2& m, Vec2&& v)
+{
+    float temp[2] = {0};
+    for(int i=0; i<2; i++)
+    {
+        for(int j=0; j<2; j++)
+        {
+            temp[i] += v[j]*m.data[i][j];
+        }
+    }
+    for(int i=0; i<2; i++)
+        v[i] = temp[i];
+
+    return std::move(v);
+}
+
+Vec2 operator*(Mat2&& m, Vec2& v)
+{
+    return Vec2(v[0]*m.data[0][0] + v[1]*m.data[0][1],
+                v[0]*m.data[1][0] + v[1]*m.data[1][1]);
+}
+
+Vec2 operator*(Mat2&& m, Vec2&& v)
+{
+    float temp[2] = {0};
+    for(int i=0; i<2; i++)
+    {
+        for(int j=0; j<2; j++)
+        {
+            temp[i] += v[j]*m.data[i][j];
+        }
+    }
+    for(int i=0; i<2; i++)
+        v[i] = temp[i];
+
+    return std::move(v);
+}
+
+std::ostream& operator<<(std::ostream& os, const Mat2& m)
+{
+    for(int i=0; i<2; i++)
+    {
+        for(int j=0; j<2; j++)
+        {
+            os << m.data[i][j] <<", ";
+        }
+        os << std::endl;
+    }
+
+    return os;
+}

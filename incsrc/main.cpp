@@ -4,16 +4,11 @@
 
 int main()
 {
-    std::cout << "-----Init" << std::endl;
+    Mat2 m(1,2,3,4);
+    Mat2 w(1,1,1,1);
 
-    Vec2 a(2,2);
-    Vec2 b(3,5);
-    Vec2 c(1,4);
-    
-    std::cout << "------Close " << std::endl;
+    Mat2 r = m*w;
 
-    Vec2 d = a + b + c;
-
-    std::cout << "(" << d[0] << "," << d[1] << ")" << std::endl;
+    std::cout<<r[0][0]<<" "<<r[0][1]<<std::endl<<r[1][0]<<" "<<r[1][1]<<std::endl;
     return 0;
 }

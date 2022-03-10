@@ -67,3 +67,42 @@ class Vec4
 };
 
 #endif
+
+class Mat2
+{
+    private:
+        float** data;
+    public:
+        Mat2();
+        Mat2(float m00, float m01, float m10, float m11);
+        Mat2(Mat2&);
+        Mat2(Mat2&&);
+        ~Mat2();
+
+        Mat2& operator=(Mat2&);
+        Mat2& operator=(Mat2&&);
+
+        float* operator[](int); 
+
+        friend Mat2 operator+(Mat2& m, Mat2& w);
+        friend Mat2 operator+(Mat2& m, Mat2&& w);
+        friend Mat2 operator+(Mat2&& m, Mat2& w);
+        friend Mat2 operator+(Mat2&& m, Mat2&& w);
+
+        friend Mat2 operator-(Mat2& m, Mat2& w);
+        friend Mat2 operator-(Mat2& m, Mat2&& w);
+        friend Mat2 operator-(Mat2&& m, Mat2& w);
+        friend Mat2 operator-(Mat2&& m, Mat2&& w);
+
+        friend Mat2 operator*(Mat2& m, Mat2& w);
+        friend Mat2 operator*(Mat2& m, Mat2&& w);
+        friend Mat2 operator*(Mat2&& m, Mat2& w);
+        friend Mat2 operator*(Mat2&& m, Mat2&& w);
+
+        friend Vec2 operator*(Mat2& m, Vec2& v);
+        friend Vec2 operator*(Mat2& m, Vec2&& v);
+        friend Vec2 operator*(Mat2&& m, Vec2& v);
+        friend Vec2 operator*(Mat2&& m, Vec2&& v);
+
+        friend std::ostream& operator<<(std::ostream& os, const Mat2& v);
+};
