@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Binary
+bin/mathril
+
+# Main file
+incsrc/main.cpp
+
+# Token
+.token
+
