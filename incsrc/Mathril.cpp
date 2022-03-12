@@ -149,6 +149,11 @@ std::ostream& operator<<(std::ostream& os, const Vec2& v)
 	return os;
 }
 
+Vec2::operator float() const
+{
+    return sqrt(data[0]*data[0] + data[1]*data[1]);
+}
+
 Vec3::Vec3()
 {
     data = new float[3];
@@ -335,6 +340,11 @@ std::ostream& operator<<(std::ostream& os, const Vec3& v)
 	return os;
 }
 
+Vec3::operator float() const
+{
+    return sqrt(data[0]*data[0] + data[1]*data[1] + data[2]*data[2]);
+}
+
 Vec4::Vec4()
 {
     data = new float[4];
@@ -472,6 +482,11 @@ std::ostream& operator<<(std::ostream& os, const Vec4& v)
 	return os;
 }
 
+Vec4::operator float() const
+{
+    return sqrt(data[0]*data[0] + data[1]*data[1] + data[2]*data[2] + data[3]*data[3]);
+}
+
 Mat3::Mat3()
 {
     data = new float*[3];
@@ -522,11 +537,11 @@ Mat3::Mat3(Mat3&& mat)
 
 Mat3::~Mat3()
 {
-    if(!data)
+    if(data)
     {
         for(int i=0; i<3; i++)
         {
-            delete [] data[i];
+             delete [] data[i];
         }
         delete [] data;
     }
@@ -545,10 +560,10 @@ Mat3& Mat3::operator=(Mat3& mat)
 
 Mat3& Mat3::operator=(Mat3&& mat)
 {
-    float** temp = data;
-    data = mat.data;
-    mat.data = temp;
-    return *this;
+   float** temp = data;
+   data = mat.data;
+   mat.data = temp;
+   return *this;
 }
 
 float* Mat3::operator[](int n)
@@ -753,4 +768,259 @@ std::ostream& operator<<(std::ostream& os, const Mat3& m)
 
 	return os;
 }
+
+double Quat::slerp_dot_threshHold = 0.9995;
+
+Quat::Quat()
+{
+    data = new float[4];
+    for(int i=0; i<3; i++)
+        data[i] = 0;
+}
+
+Quat::Quat(float r, float x, float y, float z)
+{
+    data = new float[4];
+    data[0] = r;
+    data[1] = x;
+    data[2] = y;
+    data[3] = z;
+}
+
+Quat::Quat(Quat& q)
+{
+    data = new float[4];
+    for(int i=0; i<4; i++)
+        data[i] = q.data[i];
+}
+
+Quat::Quat(Quat&& q)
+{
+    data = q.data;
+    q.data = nullptr;
+}
+
+Quat::~Quat()
+{
+    if(data)
+        delete [] data;
+}
+
+Quat& Quat::operator=(Quat& q)
+{
+    if(this == &q) return *this;
+
+    for(int i=0; i<4; i++)
+        data[i] = q.data[i];
+
+    return *this;
+}
+
+Quat& Quat::operator=(Quat&& q)
+{
+    float* temp = data;
+    data = q.data;
+    q.data = temp;
+    return *this;
+}
+
+float& Quat::operator[](int n)
+{
+   if(n >= 0 && n < 4)
+   {
+        return data[n];
+   }
+   else
+   {
+       std::cerr << "index of Quat is out of bounds" << std::endl;
+       n>0 ? n=n : n=-n;
+       return data[n%4];
+   }
+
+}
+
+Quat operator~(Quat& q)
+{
+    return Quat(q.data[0],-q.data[1],-q.data[2],-q.data[3]);
+}
+
+Quat operator~(Quat&& q)
+{
+   for(int i=1; i<3; i++)
+       q.data[i] = -q.data[i];
+    return std::move(q);
+}
+
+Quat operator+(Quat& q, Quat& p)
+{
+    return Quat(q.data[0]+p.data[0], q.data[1]+p.data[1], q.data[2]+p.data[2], q.data[3]+p.data[3]);
+}
+
+Quat operator+(Quat&& q, Quat& p)
+{
+    for(int i=0; i<4; i++) 
+        q.data[i] = q.data[i] + p.data[i];
+    
+    return std::move(q);
+}
+
+Quat operator+(Quat& q, Quat&& p)
+{
+    for(int i=0; i<4; i++)
+        p.data[i] = q.data[i] + p.data[i];
+
+    return std::move(p);
+}
+
+Quat operator+(Quat&& q, Quat&& p)
+{
+    for(int i=0; i<4; i++) 
+        q.data[i] = q.data[i] + p.data[i];
+    
+    return std::move(q);
+}
+
+
+Quat operator-(Quat& q, Quat& p)
+{
+    return Quat(q.data[0]-p.data[0], q.data[1]-p.data[1], q.data[2]-p.data[2], q.data[3]-p.data[3]);
+}
+
+Quat operator-(Quat&& q, Quat& p)
+{
+    for(int i=0; i<4; i++) 
+        q.data[i] = q.data[i] - p.data[i];
+    
+    return std::move(q);
+}
+
+Quat operator-(Quat& q, Quat&& p)
+{
+    for(int i=0; i<4; i++)
+        p.data[i] = q.data[i] - p.data[i];
+
+    return std::move(p);
+}
+
+Quat operator-(Quat&& q, Quat&& p)
+{
+    for(int i=0; i<4; i++) 
+        q.data[i] = q.data[i] - p.data[i];
+    
+    return std::move(q);
+}
+
+
+
+Quat operator*(Quat& q, Quat& p)
+{
+    return Quat(q.data[0]*p.data[0] - q.data[1]*p.data[1] - q.data[2]*p.data[2] - q.data[3]*p.data[3],
+                q.data[0]*p.data[1] + q.data[1]*p.data[0] + q.data[2]*p.data[3] - q.data[3]*p.data[2],
+                q.data[0]*p.data[2] - q.data[1]*p.data[3] + q.data[2]*p.data[0] + q.data[3]*p.data[1],
+                q.data[0]*p.data[3] + q.data[1]*p.data[2] - q.data[2]*p.data[1] + q.data[3]*p.data[0]);
+}
+
+Quat operator*(Quat&& q, Quat& p)
+{
+    float temp[4];
+    temp[0] = q.data[0]*p.data[0] - q.data[1]*p.data[1] - q.data[2]*p.data[2] - q.data[3]*p.data[3];
+    temp[1] = q.data[0]*p.data[1] + q.data[1]*p.data[0] + q.data[2]*p.data[3] - q.data[3]*p.data[2];
+    temp[2] = q.data[0]*p.data[2] - q.data[1]*p.data[3] + q.data[2]*p.data[0] + q.data[3]*p.data[1];
+    temp[3] = q.data[0]*p.data[3] + q.data[1]*p.data[2] - q.data[2]*p.data[1] + q.data[3]*p.data[0];
+
+    for(int i=0; i<4; i++)
+        q.data[i] = temp[i];
+
+
+    return std::move(q);
+}
+
+
+Quat operator*(Quat& q, Quat&& p)
+{
+    float temp[4];
+    temp[0] = q.data[0]*p.data[0] - q.data[1]*p.data[1] - q.data[2]*p.data[2] - q.data[3]*p.data[3];
+    temp[1] = q.data[0]*p.data[1] + q.data[1]*p.data[0] + q.data[2]*p.data[3] - q.data[3]*p.data[2];
+    temp[2] = q.data[0]*p.data[2] - q.data[1]*p.data[3] + q.data[2]*p.data[0] + q.data[3]*p.data[1];
+    temp[3] = q.data[0]*p.data[3] + q.data[1]*p.data[2] - q.data[2]*p.data[1] + q.data[3]*p.data[0];
+
+    for(int i=0; i<4; i++)
+        p.data[i] = temp[i];
+
+
+    return std::move(p);
+}
+
+
+Quat operator*(Quat&& q, Quat&& p)
+{
+    float temp[4];
+    temp[0] = q.data[0]*p.data[0] - q.data[1]*p.data[1] - q.data[2]*p.data[2] - q.data[3]*p.data[3];
+    temp[1] = q.data[0]*p.data[1] + q.data[1]*p.data[0] + q.data[2]*p.data[3] - q.data[3]*p.data[2];
+    temp[2] = q.data[0]*p.data[2] - q.data[1]*p.data[3] + q.data[2]*p.data[0] + q.data[3]*p.data[1];
+    temp[3] = q.data[0]*p.data[3] + q.data[1]*p.data[2] - q.data[2]*p.data[1] + q.data[3]*p.data[0];
+
+    for(int i=0; i<4; i++)
+        p.data[i] = temp[i];
+
+
+    return std::move(p);
+}
+
+
+Quat operator*(float s, Quat& q)
+{
+    return Quat(s*q.data[0], s*q.data[1], s*q.data[2], s*q.data[3]);
+}
+
+Quat operator*(float s, Quat&& q)
+{
+    for(int i=0; i<4; i++)
+        q.data[i] = s*q.data[i];
+
+    return std::move(q);
+}
+
+Quat::operator float() const
+{
+    return sqrt(data[0]*data[0] + data[1]*data[1] + data[2]*data[2] + data[3]*data[3]);
+}
+  
+Quat slerp(Quat& q, Quat& p, float t)
+{
+    	double cosA = (q.data[0] * p.data[0] + q.data[1] * p.data[1] + q.data[2] * p.data[2] + q.data[3] * p.data[3]) / ( (float)q * (float)p );
+	if (cosA < 0.0)
+	{
+		p = ~p;
+		p.data[0] = -p.data[0];
+		cosA = -cosA;
+	}
+
+	if (cosA > Quat::slerp_dot_threshHold)
+	{
+		Quat result = (1.0 - t) * q + t * p;
+		result = result.normal();
+		return result;
+	}
+	double alpha = acos(cosA);
+
+	Quat res = (sin((1.0 - t) * alpha) / sin(alpha)) * q + (sin(t * alpha) / sin(alpha)) * p;
+	res = res.normal();
+	return res;
+	
+}
+
+
+Quat Quat::normal()
+{
+   float inv = 1.0f/(float)(*this); 
+   return Quat(inv*data[0], inv*data[1], inv*data[2], inv*data[3]);
+}
+
+std::ostream& operator<<(std::ostream& os, const Quat& q)
+{
+    os << "[" << q.data[0] << ", " << q.data[1] << "i, " << q.data[2] << "j, " << q.data[3] << "k]";
+    return os;
+}
+
 

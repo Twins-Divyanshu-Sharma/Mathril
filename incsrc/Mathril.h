@@ -2,7 +2,7 @@
 #define H_M4THR1L_H
 
 #include <iostream>
-
+#include <math.h>
 
 class Vec2
 {
@@ -34,7 +34,8 @@ class Vec2
         friend Vec2 operator*(float,Vec2&&);
 
         friend std::ostream& operator<<(std::ostream& os, const Vec2& v);
-
+        
+        explicit operator float() const; // Returns Magnitude
 };
 
 class Vec3
@@ -77,6 +78,8 @@ class Vec3
         friend Vec3 operator*(float, Vec3&&); 
 
         friend std::ostream& operator<<(std::ostream& os, const Vec3& v);
+
+        explicit operator float() const; // returns Magnitude
 };
 
 
@@ -111,6 +114,8 @@ class Vec4
         friend Vec4 operator*(float,Vec4&&);
 
         friend std::ostream& operator<<(std::ostream& os, const Vec4& v);
+
+        explicit operator float() const; // returns Magnitude
 };
 
 
@@ -158,5 +163,51 @@ class Mat3
 };
 
 
+class Quat
+{
+    private:
+        float* data;
+        static double slerp_dot_threshHold;
+    public:
+        Quat();
+        Quat(float r, float x, float y, float z);
+        Quat(Quat&);
+        Quat(Quat&&);
+        ~Quat();
+
+        Quat& operator=(Quat&);
+        Quat& operator=(Quat&&);
+
+        float& operator[](int n);
+
+        friend Quat operator~(Quat&);
+        friend Quat operator~(Quat&&);
+
+        friend Quat operator+(Quat& q, Quat& p);
+        friend Quat operator+(Quat&& q, Quat& p);
+        friend Quat operator+(Quat& q, Quat&& p);
+        friend Quat operator+(Quat&& q, Quat&& p); 
+
+        friend Quat operator-(Quat& q, Quat& p);
+        friend Quat operator-(Quat&& q, Quat& p);
+        friend Quat operator-(Quat& q, Quat&& p);
+        friend Quat operator-(Quat&& q, Quat&& p); 
+
+        friend Quat operator*(Quat& q, Quat& p);
+        friend Quat operator*(Quat&& q, Quat& p);
+        friend Quat operator*(Quat& q, Quat&& p);
+        friend Quat operator*(Quat&& q, Quat&& p);
+
+        friend Quat operator*(float s, Quat& q);
+        friend Quat operator*(float s, Quat&& q);
+
+        friend Quat slerp(Quat& q, Quat& p, float t);
+        
+        explicit operator float() const; // get magnitude
+        
+        Quat normal(); 
+
+        friend std::ostream& operator<<(std::ostream& os, const Quat& q);
+};
 
 #endif
