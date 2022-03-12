@@ -5,25 +5,14 @@
 int main()
 {
 
+    Mat2 mat(0,1,2,3);
+    Vec2 yo(3,4);
 
-    Mat4 m(6,6,6,6,
-            6,6,6,6,
-            6,6,6,6,
-            6,6,6,6);
+    Vec2 ans = mat * yo;
 
+    std::cout << ans << std::endl;
 
-     Mat4 w(1,0,0,0,
-            0,1,0,0,
-            0,0,1,0,
-            0,0,0,1);
+    std::cout << (float)ans << std::endl;
 
-
-   Mat4 r = m*w*w*w*w*w; 
-
-  //  Vec4 r = m*v + m*v + m*v;
-
-//    std::cout << r[0]<<" "<<r[1]<< " "<<r[2]<<" "<<r[3] << std::endl;
-
-   std::cout <<r;
     return 0;
 }
