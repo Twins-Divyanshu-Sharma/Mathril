@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# binary file
 bin/mathril
+
+#main file
 incsrc/main.cpp
 
