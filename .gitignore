@@ -31,9 +31,12 @@
 *.out
 *.app
 
-# binary file
+# Binary
 bin/mathril
 
-#main file
+# Main file
 incsrc/main.cpp
+
+# Token
+.token
 

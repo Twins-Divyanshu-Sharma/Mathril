@@ -4,26 +4,15 @@
 
 int main()
 {
-   Mat3 identity(1,2,3,
-                 2,1,2,
-                 3,2,2);
 
-   Mat3 someShit(2,2,2,
-                 5,3,1,
-                 1,6,7);
+    Mat2 mat(0,1,2,3);
+    Vec2 yo(3,4);
 
-   Mat3 mult = identity * someShit;
+    Vec2 ans = mat * yo;
 
-    
-   std::cout << mult << std::endl;
+    std::cout << ans << std::endl;
 
-   Mat3 lolt = Mat3(1,2,3,2,1,2,3,2,2) * someShit;
+    std::cout << (float)ans << std::endl;
 
-   std::cout << lolt << std::endl;
-
-   Mat3 rort = identity * Mat3(2,2,2,5,3,1,1,6,7);
-
-   std::cout << rort << std::endl;
-
-   return 0;
+    return 0;
 }
