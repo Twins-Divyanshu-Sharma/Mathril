@@ -4,7 +4,7 @@
 # ___MATHRIL___
 As light as addition, as hard as Calculus\
 \
-Mathril is a mathematics library for game programming in C++. Calculations are similar to regular mathematics. It heavily uses operator overloading with r-value reference to thoroughly optimize performance and reduce memory consumption. Equiped with this Mathril armor, you are now ready to face any danger lurking in world of game engine programming. Best of luck for your journey.
+Mathril is a mathematics library for game programming in C++. Calculations are similar to regular mathematics. It heavily uses operator overloading with r-value reference to thoroughly optimize performance and reduce memory consumption. Equiped with this Mathril armor, you are now ready to face any danger lurking in world of game engine programming. Go forth, a new adventure awaits.
 
 # Installation
 Just include Mahtril.h and Mathril.cpp from incsrc folder of this project, to your project
@@ -45,7 +45,7 @@ std::cout << vec << std::endl;
 ```
 
 ## Vec4 ( four dimensional vector )
-It is similar to Vec2 just contains additional two floats.
+It is similar to Vec2 just contains four floats.
 
 ## Vec3 ( three dimensional vector )
 It is similar to Vec2 and Vec4 but it has additional two functions:
@@ -119,7 +119,7 @@ Quat q; // default constructor
 Quat quat(1,2,3,4); // r=1, x=2, y=3, z=4
 ```
 ### Access
-Use [] operator to access the elements, [0] for r, [1] for i, [2] for j, [3] for k
+Use [ ] operator to access the elements, [0] for r, [1] for i, [2] for j, [3] for k
 ```
 Quat quat(23,42,11,15);
 std::cout << quat[2] << std::endl; // displays 11 in console
