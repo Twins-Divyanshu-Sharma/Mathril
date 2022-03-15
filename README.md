@@ -67,7 +67,7 @@ Vec3 crossProduct = a % b;
 ```
 
 # Matrices
-We will use Mat3 do discuss matrix, Mat2 and Mat4 are similar\
+We will use Mat3 do discuss matrix, Mat2 and Mat4 are similar
 ## Mat3
 ### Initialization
 You can use default constructor, which initializes the matrix to 0\
