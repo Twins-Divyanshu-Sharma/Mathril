@@ -1,5 +1,5 @@
-![smallSize](https://user-images.githubusercontent.com/47611483/158384632-26c63974-e1a1-49d6-ad8a-0647b0cd5866.png)
+![MathShieldSmall](https://user-images.githubusercontent.com/47611483/158402464-265a51a3-9104-4d19-8c81-6122ea4b5fd1.png)
 
 
-# Mathril
+# ___MATHRIL___
 As light as addition, as hard as Calculus
