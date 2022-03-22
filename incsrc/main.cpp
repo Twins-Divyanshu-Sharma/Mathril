@@ -5,14 +5,21 @@
 int main()
 {
 
-    Mat2 mat(0,1,2,3);
-    Vec2 yo(3,4);
+    Mat3 mat(2,1,4, 3,2,7, 8,9,0);
+    Vec3 yo(1,1,1);
+    Mat3 id(1,0,0, 0,1,0, 0,0,1);
 
-    Vec2 ans = mat * yo;
+    Mat3 t = mat * id * id * id;
 
-    std::cout << ans << std::endl;
+    std::cout << t<<std::endl;
 
-    std::cout << (float)ans << std::endl;
+
+
+   // std::cout << (float)ans << std::endl;
+   //
+
+    for(int i=0; i<9; i++)
+        std::cout << t[0][i] << std::endl;
 
     return 0;
 }
