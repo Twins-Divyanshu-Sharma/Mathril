@@ -1,8 +1,10 @@
-![MathShieldSmall](https://user-images.githubusercontent.com/47611483/158402464-265a51a3-9104-4d19-8c81-6122ea4b5fd1.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/47611483/158402464-265a51a3-9104-4d19-8c81-6122ea4b5fd1.png">
+  <h1 align="center"> MATHRIL </h1>
+</p>
 
 
-# ___MATHRIL___
-As light as addition, as hard as Calculus\
 \
 Mathril is a mathematics library for game programming in C++. Calculations are similar to regular mathematics. It heavily uses operator overloading with r-value reference to thoroughly optimize performance and reduce memory consumption. Equiped with this Mathril armor, you are now ready to face any danger lurking in world of game engine programming. Go forth, a new adventure awaits.
 
