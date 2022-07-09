@@ -1,25 +1,34 @@
 #include <iostream>
 #include <string>
+#include <array>
 #include "Mathril.h"
+
 
 int main()
 {
+    Mat2 a(1,2,3,4);
+    Mat2 b(0,1,2,3);
+    Mat2 c(-1,0,1,2);
 
-    Mat3 mat(2,1,4, 3,2,7, 8,9,0);
-    Vec3 yo(1,1,1);
-    Mat3 id(1,0,0, 0,1,0, 0,0,1);
+    Mat2 yo = a + b + c;
+    
+    std::cout << yo << std::endl;
+    
+    Quat yolo;
 
-    Mat3 t = mat * id * id * id;
+    std::cout << yolo << std::endl;
 
-    std::cout << t<<std::endl;
+    int arr[] = {1,2,3,4};
+
+    int marr[] = {-1,-2,-3,-4};
+
+    std::cout << "address : " << arr << " & " << marr << std::endl;
+
+    std::move(arr, arr+4, marr);
 
 
+    std::cout << "address : " << arr << " & " << marr << std::endl;
 
-   // std::cout << (float)ans << std::endl;
-   //
-
-    for(int i=0; i<9; i++)
-        std::cout << t[0][i] << std::endl;
 
     return 0;
 }
