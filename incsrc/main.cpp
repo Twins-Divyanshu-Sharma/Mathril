@@ -6,29 +6,15 @@
 
 int main()
 {
-    Mat2 a(1,2,3,4);
-    Mat2 b(0,1,2,3);
-    Mat2 c(-1,0,1,2);
+    Mat2 a(1,1,1,1);
+    Mat2 b(2,2,2,2);
+    Mat2 c(3,3,3,3);
+    Mat2 d(4,4,4,4);
+    std::cout << "---------------" << std::endl;
 
-    Mat2 yo = a + b + c;
+    Mat2 yo = a + b + c + d;
     
     std::cout << yo << std::endl;
     
-    Quat yolo;
-
-    std::cout << yolo << std::endl;
-
-    int arr[] = {1,2,3,4};
-
-    int marr[] = {-1,-2,-3,-4};
-
-    std::cout << "address : " << arr << " & " << marr << std::endl;
-
-    std::move(arr, arr+4, marr);
-
-
-    std::cout << "address : " << arr << " & " << marr << std::endl;
-
-
     return 0;
 }

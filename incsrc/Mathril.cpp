@@ -451,7 +451,6 @@ Mat2::Mat2()
 
 Mat2::Mat2(float m00, float m01, float m10, float m11)
 {
-    std::cout << "arg ctr" << std::endl;
     data[0][0] = m00;
     data[0][1] = m01;
     data[1][0] = m10;
@@ -460,7 +459,6 @@ Mat2::Mat2(float m00, float m01, float m10, float m11)
 
 Mat2::Mat2(Mat2& m)
 {
-    std::cout << "l ctr" << std::endl;
     for(int i=0; i<2; i++)
     {
         for(int j=0; j<2; j++)
@@ -473,7 +471,6 @@ Mat2::Mat2(Mat2& m)
 
 Mat2::Mat2(Mat2&& m)
 {
-    std::cout << "r ctr " << std::endl;
     std::move(m.data[0], m.data[0] + 4, data[0]);
 }
 
@@ -484,7 +481,6 @@ Mat2::~Mat2()
 
 Mat2& Mat2::operator=(Mat2& m)
 {
-    std::cout << "l=" << std::endl;
     if( this == &m ) return *this;
 
     for(int i=0; i<2; i++)
@@ -496,7 +492,6 @@ Mat2& Mat2::operator=(Mat2& m)
 
 Mat2& Mat2::operator=(Mat2&& m)
 {
-    std::cout << "r = " << std::endl;
     std::move(m.data[0], m.data[0] + 4, data[0]);
     return *this;
 }
