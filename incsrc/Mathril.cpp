@@ -40,7 +40,8 @@ Vec2::Vec2(Vec2&& vec)
 
 Vec2& Vec2::operator=(Vec2& vec)
 {
-    if(this == &vec) return *this;
+    if(this == &vec) [[unlikely]]
+	return *this;
     data[0] = vec.data[0];
     data[1] = vec.data[1];
     return *this;
@@ -164,7 +165,8 @@ Vec3::~Vec3()
 
 Vec3& Vec3::operator=(Vec3& vec)
 {
-    if(this== &vec) return *this;
+    if(this== &vec) [[unlikely]]
+	return *this;
     for(int i=0; i<3; i++)
         data[i] = vec.data[i];
      return *this; 
@@ -341,7 +343,8 @@ Vec4::Vec4(Vec4&& vec)
 
 Vec4& Vec4::operator=(Vec4& vec)
 {
-    if(this == &vec) return *this;
+    if(this == &vec) [[unlikely]]
+    	return *this;
     data[0] = vec.data[0];
     data[1] = vec.data[1];
     return *this;
@@ -481,7 +484,8 @@ Mat2::~Mat2()
 
 Mat2& Mat2::operator=(Mat2& m)
 {
-    if( this == &m ) return *this;
+    if( this == &m ) [[unlikely]] 
+    	return *this;
 
     for(int i=0; i<2; i++)
         for(int j=0; j<2; j++)
@@ -723,7 +727,8 @@ Mat3::~Mat3()
 
 Mat3& Mat3::operator=(Mat3& mat)
 {
-    if(this == &mat) return *this;
+    if(this == &mat) [[unlikely]] 
+    	return *this;
 
     for(int i=0; i<3; i++)
         for(int j=0; j<3; j++)
@@ -980,7 +985,8 @@ Mat4::~Mat4()
 
 Mat4& Mat4::operator=(Mat4& m)
 {
-    if( this == &m ) return *this;
+    if( this == &m ) [[unlikely]] 
+    	return *this;
 
     for(int i=0; i<4; i++)
         for(int j=0; j<4; j++)
@@ -1242,7 +1248,8 @@ Quat::~Quat()
 
 Quat& Quat::operator=(Quat& q)
 {
-    if(this == &q) return *this;
+    if(this == &q) [[unlikely]] 
+    	return *this;
 
     for(int i=0; i<4; i++)
         data[i] = q.data[i];
