@@ -6,7 +6,7 @@
 # ___MATHRIL___
 As light as addition, as hard as Calculus\
 \
-Mathril is a mathematics library for game programming in C++. Calculations are similar to regular mathematics (yes, thats right, no words mumbo jumbo like add subtract etc, only operator , only and only operators, even for getting length. Muhahahah). It heavily uses operator overloading with r-value reference. Equiped with this Mathril armor, you are now ready to face any danger lurking in world of game engine programming. Go forth, a new adventure awaits.
+Mathril is a mathematics library for game programming in C++. It uses operator overloading with r-value reference which makes calculation more maths friendly.
 
 # Installation
 Just include Mahtril.h and Mathril.cpp from incsrc folder of this project, to your project
@@ -41,7 +41,6 @@ Vec2 vec(20,10); // creating a vector
 float magnitude = (float)vec; // explicit typecast to float
 ```
 ### Output to std::cout
-Yes, yes, you can view your vector too in the console, just dont forget std::endl at the end.
 ```
 std::cout << vec << std::endl;
 ```
