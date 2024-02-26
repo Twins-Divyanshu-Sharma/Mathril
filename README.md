@@ -6,7 +6,11 @@
 # ___MATHRIL___
 As light as addition, as hard as Calculus\
 \
-Mathril is a mathematics library for game programming in C++. It uses operator overloading with r-value reference which makes calculation more maths friendly.
+Mathril is a mathematics library for game programming in C++. It uses operator overloading with r-value reference which makes calculation more maths friendly. For example : -
+```
+Mat3 a, b, c;
+Mat3 m = a*b + c;
+```
 
 # Installation
 Just include Mahtril.h and Mathril.cpp from incsrc folder of this project, to your project
