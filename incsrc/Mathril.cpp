@@ -29,7 +29,7 @@ Vec2::~Vec2()
 {
 }
 
-Vec2::Vec2(Vec2& vec): data{vec.data[0],vec.data[1]}
+Vec2::Vec2(const Vec2& vec): data{vec.data[0],vec.data[1]}
 {
 }
 
@@ -150,7 +150,7 @@ Vec3::Vec3(float x, float y, float z): data{x, y, z}
 {
 }
 
-Vec3::Vec3(Vec3& vec): data{vec.data[0], vec.data[1], vec.data[2]}
+Vec3::Vec3(const Vec3& vec): data{vec.data[0], vec.data[1], vec.data[2]}
 {
 } 
 
@@ -332,7 +332,7 @@ Vec4::~Vec4()
 {
 }
 
-Vec4::Vec4(Vec4& vec): data{vec.data[0], vec.data[1], vec.data[2], vec.data[3]}
+Vec4::Vec4(const Vec4& vec): data{vec.data[0], vec.data[1], vec.data[2], vec.data[3]}
 {
 }
 
@@ -460,7 +460,7 @@ Mat2::Mat2(float m00, float m01, float m10, float m11)
     data[1][1] = m11;
 }
 
-Mat2::Mat2(Mat2& m)
+Mat2::Mat2(const Mat2& m)
 {
     for(int i=0; i<2; i++)
     {
@@ -705,7 +705,7 @@ Mat3::Mat3(float m00, float m01, float m02,
     data[2][0] = m20; data[2][1] = m21; data[2][2] = m22;
 }
 
-Mat3::Mat3(Mat3& mat)
+Mat3::Mat3(const Mat3& mat)
 {
     for(int i=0; i<3; i++)
     {
@@ -933,6 +933,7 @@ Vec3 operator*(Mat3&& m, Vec3&& v)
 }
 
 
+
 std::ostream& operator<<(std::ostream& os, const Mat3& m)
 {
     for(int i=0; i<3; i++)
@@ -965,7 +966,7 @@ Mat4::Mat4(
     data[3][0] = m30;   data[3][1] = m31;   data[3][2] = m32;   data[3][3] = m33;
 }
 
-Mat4::Mat4(Mat4& m)
+Mat4::Mat4(const Mat4& m)
 {
     for(int i=0; i<4; i++)
     {
@@ -1231,7 +1232,7 @@ Quat::Quat(float r, float x, float y, float z) : data{r,x,y,z}
 {
 }
 
-Quat::Quat(Quat& q)
+Quat::Quat(const Quat& q)
 {
     for(int i=0; i<4; i++)
         data[i] = q.data[i];
@@ -1462,3 +1463,43 @@ std::ostream& operator<<(std::ostream& os, const Quat& q)
     return os;
 }
 
+Quat::operator Mat4() const
+{
+  // x=1, y=2, z=3, w=0
+  return Mat4(
+    1.0-2.0*(data[2]*data[2] + data[3]*data[3]), 2.0*(data[1]*data[2] - data[3]*data[0]), 2.0*(data[1]*data[3] + data[2]*data[0]), 0.0,
+    2.0*(data[1]*data[2] + data[3]*data[0]), 1.0-2.0*(data[1]*data[1] + data[3]*data[3]), 2.0*(data[2]*data[3] - data[1]*data[0]), 0.0,
+    2.0*(data[1]*data[3] - data[2]*data[0]), 2.0*(data[2]*data[3] + data[1]*data[0]), 1.0-2.0*(data[1]*data[1] + data[2]*data[2]), 0.0,
+    0.0,  0.0,  0.0,  1.0
+  );
+  
+}
+
+// forward declared function (dependent on quaternion therefore lastly declared
+Mat3::operator Quat() const
+{
+  float t = 0;
+  Quat q;
+  if (data[2][2] < 0) {
+      if (data[0][0] > data[1][1]) {
+          t = 1 + data[0][0] - data[1][1] - data[2][2];
+          q =  Quat(data[0][1]+data[1][0], data[2][0]+data[0][2], data[1][2]-data[2][1], t );
+      }
+      else {
+          t = 1 -data[0][0] + data[1][1] -data[2][2];
+          q = Quat( data[2][0]-data[0][2],  data[0][1]+data[1][0], t, data[1][2]+data[2][1]);
+      }
+  }
+  else {
+      if (data[0][0] < - data[1][1]) {
+          t = 1 -data[0][0] - data[1][1] + data[2][2];
+          q = Quat(data[0][1]-data[1][0], data[2][0]+ data[0][2], data[1][2] + data[2][1], t );
+      }
+      else {
+          t = 1 + data[0][0] + data[1][1] + data[2][2];
+          q = Quat(t, data[1][2]-data[2][1], data[2][0]-data[0][2], data[0][1]-data[1][0]);
+      }
+  }
+  float mag = 0.5f / sqrt(t);
+  return (mag * q);
+}
